@@ -71,9 +71,11 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
    *
    * @param pInhalt which will be inserted
    */
-  public void insert(ContentType pInhalt) {
+  public void insert(ContentType pInhalt, AVL_Tree<ContentType> pParent) {
     if (this.isEmpty()) {
       basis = pInhalt;
+      parent = pParent;
+      makeAVL();
       return;
     }
 
@@ -81,7 +83,8 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
       if (right == null) {
         right = new AVL_Tree<ContentType>();
       }
-      right.insert(pInhalt);
+      right.insert(pInhalt, this);
+      makeAVL();
       return;
     }
 
@@ -89,10 +92,59 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
       if (left == null) {
         left = new AVL_Tree<ContentType>();
       }
-      left.insert(pInhalt);
+      left.insert(pInhalt, this);
+      makeAVL();
       return;
     }
 
+  }
+
+  private void makeAVL() {
+    if(getBalance() < -1 | getBalance() > 1){
+      /*
+      right outside
+      left outside
+      left inside
+      right inside
+       */
+
+      // right tree with too long right side
+      if(getLeft() != null && getBalance() < 0 && getRight().getBalance() < 0){
+        AVL_Tree<ContentType> temp = getRight().getLeft();
+        AVL_Tree<ContentType> tempparent = getParent();
+        getRight().left = this;
+        this.parent = getRight();
+        getRight().parent = getParent();
+        if(isRightTree()){
+          tempparent.right = getRight();
+        }
+        else {
+          tempparent.left = getRight();
+        }
+        right = temp;
+
+      }
+      // left tree with too long left side
+
+        if (getLeft() != null && getBalance() > 0 && getLeft().getBalance() > 0) {
+          AVL_Tree<ContentType> temp = getLeft().getRight();
+          AVL_Tree<ContentType> tempparent = getParent();
+          getLeft().right = this;
+          this.parent = getLeft();
+          getRight().parent = getParent();
+          if (isRightTree()) {
+            getParent().right = getRight();
+          } else {
+            getParent().left = getRight();
+          }
+          right = temp;
+
+        }
+
+    }
+    if(getParent() != null){
+      getParent().makeAVL();
+    }
   }
 
 
@@ -105,6 +157,16 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
   }
   public   AVL_Tree<ContentType> getParent(){
     return parent;
+  }
+
+  public boolean isRightTree(){
+    if(getParent() == null){
+      return false;
+    }
+    if(getParent().getRight() == this){
+      return true;
+    }
+    return false;
   }
 
 
@@ -223,5 +285,46 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
     }
 
     return null;
+  }
+  public int getHeight(){
+    if (basis == null) {
+      return 0;
+    }
+    if (this.isEmpty()) {
+      return 0;
+    }
+    int hightl;
+    if (getLeft() == null) {
+      hightl = 0;
+    } else {
+      hightl = getLeft().getHeight();
+    }
+    int hightr;
+    if (getLeft() == null) {
+      hightr = 0;
+    } else {
+      hightr = getRight().getHeight();
+    }
+    if (hightr > hightl) {
+      return 1 + hightr;
+    } else {
+      return 1 + hightl;
+    }
+  }
+
+  public int getBalance(){
+    int hightl;
+    if (getLeft() == null) {
+      hightl = 0;
+    } else {
+      hightl = getLeft().getHeight()+1;
+    }
+    int hightr;
+    if (getRight() == null) {
+      hightr = 0;
+    } else {
+      hightr = getRight().getHeight()+1;
+    }
+    return hightl-hightr;
   }
 }

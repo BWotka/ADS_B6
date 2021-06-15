@@ -9,15 +9,15 @@ import java.io.InputStreamReader;
 public class EinAusgabe {
   boolean keepRunning = true;
   BufferedReader br;
-  BinarySearchTree<SortierInt> intTree;
-  BinarySearchTree<SortierString> stringTree;
+  AVL_Tree<SortierInt> intTree;
+  AVL_Tree<SortierString> stringTree;
 
   /**
    * constructor which also starts the main loop.
    */
   public EinAusgabe() {
     br = new BufferedReader(new InputStreamReader(System.in));
-    intTree = new BinarySearchTree<SortierInt>();
+    intTree = new AVL_Tree<>();
     programLoop();
   }
 
@@ -74,7 +74,7 @@ public class EinAusgabe {
     intTree.remove(new SortierInt(mod));
     System.out.println("Wie soll die Zahl jetzt lauten?");
     sInt.setInhalt(leseInteger());
-    intTree.insert(sInt);
+    intTree.insert(sInt,  intTree);
     System.out.println("Neue Zahl jetzt im Baum");
   }
 
@@ -88,7 +88,7 @@ public class EinAusgabe {
   private void create() {
     System.out.println("Erstellen ausgewählt");
     System.out.println("Welche Zahl soll eingefuegt werden?");
-    intTree.insert(new SortierInt(leseInteger()));
+    intTree.insert(new SortierInt(leseInteger()), intTree);
     System.out.println("Zahl erfolgreich eingefuegt");
 
 
@@ -121,7 +121,7 @@ public class EinAusgabe {
    * @param pDepth  depth of pWurzel in complete tree
    * @return preorder String of tree
    */
-  private String preorder(BinarySearchTree<SortierInt> pWurzel, int pDepth) {
+  private String preorder(AVL_Tree<SortierInt> pWurzel, int pDepth) {
     if (pWurzel == null) {
       return "null\n";
     }
@@ -144,7 +144,7 @@ public class EinAusgabe {
    * @param pDepth  depth of pWurzel in complete tree
    * @return inorder String of tree
    */
-  private String inorder(BinarySearchTree<SortierInt> pWurzel, int pDepth) {
+  private String inorder(AVL_Tree<SortierInt> pWurzel, int pDepth) {
     if (pWurzel == null) {
       return "null\n";
     }
@@ -165,14 +165,14 @@ public class EinAusgabe {
    * @param pDepth  depth of pWurzel in complete tree
    * @return String like "a(ha,ba)"
    */
-  private String wertAusgabe(BinarySearchTree<SortierInt> pWurzel, int pDepth) {
+  private String wertAusgabe(AVL_Tree<SortierInt> pWurzel, int pDepth) {
     if (pWurzel == null) {
       return "null";
     }
     if (pWurzel.isEmpty()) {
       return "null";
     }
-    return pWurzel.getContent().getInhalt() + "(" + maxDepth(pWurzel) + " ," + balance(pWurzel) + ")";
+    return pWurzel.getContent().getInhalt() + "(" + pWurzel.getHeight() + " ," + pWurzel.getBalance() + ")";
   }
 
   private String removeEmptyTrees(String pausgabe) {
@@ -195,31 +195,7 @@ public class EinAusgabe {
    * @param pWurzel of which the max depth will be calcualted
    * @return max depth of parameter tree
    */
-  private int maxDepth(BinarySearchTree<SortierInt> pWurzel) {
-    if (pWurzel == null) {
-      return 0;
-    }
-    if (pWurzel.isEmpty()) {
-      return 0;
-    }
-    int hightl;
-    if (pWurzel.getLeft() == null) {
-      hightl = 0;
-    } else {
-      hightl = maxDepth(pWurzel.getLeft());
-    }
-    int hightr;
-    if (pWurzel.getLeft() == null) {
-      hightr = 0;
-    } else {
-      hightr = maxDepth(pWurzel.getRight());
-    }
-    if (hightr > hightl) {
-      return 1 + hightr;
-    } else {
-      return 1 + hightl;
-    }
-  }
+
 
   /**
    * Calculates balance of pWurzel.
@@ -227,8 +203,6 @@ public class EinAusgabe {
    * @param pWurzel tree of which the balance will be calculated
    * @return balanace of parameter tree
    */
-  private int balance(BinarySearchTree<SortierInt> pWurzel) {
-    return maxDepth(pWurzel.getLeft()) - maxDepth(pWurzel.getRight());
-  }
+
 }
 

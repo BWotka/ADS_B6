@@ -10,8 +10,9 @@ class BinaryTreeTest {
    */
   @Test
   public void left() {
-    BinaryTree<Integer> binTree = new BinaryTree<Integer>(3, new BinaryTree<Integer>(5), new BinaryTree<Integer>(7));
-    assertEquals(5, binTree.getLeft().getContent());
+    AVL_Tree<SortierInt> intAVL_tree = new AVL_Tree<>(new SortierInt(5));
+    intAVL_tree.insert(new SortierInt(2), intAVL_tree);
+    assertEquals(2, intAVL_tree.getLeft().getContent().getInhalt());
   }
 
   /*
@@ -19,8 +20,9 @@ class BinaryTreeTest {
    */
   @Test
   public void right() {
-    BinaryTree<Integer> binTree = new BinaryTree<Integer>(3, new BinaryTree<Integer>(5), new BinaryTree<Integer>(7));
-    assertEquals(7, binTree.getRight().getContent());
+    AVL_Tree<SortierInt> intAVL_tree = new AVL_Tree<>(new SortierInt(5));
+    intAVL_tree.insert(new SortierInt(8), intAVL_tree);
+    assertEquals(8, intAVL_tree.getRight().getContent().getInhalt());
   }
 
   /*
@@ -28,8 +30,8 @@ class BinaryTreeTest {
    */
   @Test
   public void value() {
-    BinaryTree<Integer> binTree = new BinaryTree<Integer>(3, new BinaryTree<Integer>(5), new BinaryTree<Integer>(7));
-    assertEquals(3, binTree.getContent());
+    AVL_Tree<SortierInt> intAVL_tree = new AVL_Tree<>(new SortierInt(12));
+    assertEquals(12, intAVL_tree.getContent().getInhalt());
   }
 
   /*
@@ -37,7 +39,7 @@ class BinaryTreeTest {
    */
   @Test
   public void leer_isEmpty() {
-    assertTrue(new BinaryTree<Integer>().isEmpty());
+    assertTrue(new AVL_Tree<SortierInt>().isEmpty());
   }
 
   /*
@@ -45,7 +47,7 @@ class BinaryTreeTest {
    */
   @Test
   public void voll_isEmpty() {
-    assertFalse(new BinaryTree<Integer>(3, new BinaryTree<Integer>(5), new BinaryTree<Integer>(7)).isEmpty());
+    assertFalse(new AVL_Tree<SortierInt>(new SortierInt(3)).isEmpty());
   }
 
   /*
@@ -53,10 +55,10 @@ class BinaryTreeTest {
    */
   @Test
   public void search_isInTree() {
-    BinarySearchTree<SortierInt> wurzel = new BinarySearchTree<SortierInt>(new SortierInt(6));
-    wurzel.insert(new SortierInt(2));
-    wurzel.insert(new SortierInt(12));
-    wurzel.insert(new SortierInt(8));
+    AVL_Tree<SortierInt> wurzel = new AVL_Tree<>(new SortierInt(6));
+    wurzel.insert(new SortierInt(2), wurzel);
+    wurzel.insert(new SortierInt(12), wurzel);
+    wurzel.insert(new SortierInt(8), wurzel);
     assertEquals(wurzel.search(new SortierInt(8)).inhalt, 8);
   }
 
@@ -65,10 +67,10 @@ class BinaryTreeTest {
    */
   @Test
   public void search_isNotInTree() {
-    BinarySearchTree<SortierInt> wurzel = new BinarySearchTree<SortierInt>(new SortierInt(6));
-    wurzel.insert(new SortierInt(2));
-    wurzel.insert(new SortierInt(12));
-    wurzel.insert(new SortierInt(8));
+    AVL_Tree<SortierInt> wurzel = new AVL_Tree<>(new SortierInt(6));
+    wurzel.insert(new SortierInt(2), wurzel);
+    wurzel.insert(new SortierInt(12), wurzel);
+    wurzel.insert(new SortierInt(8), wurzel);
     assertNull(wurzel.search(new SortierInt(9)));
   }
 
@@ -77,10 +79,11 @@ class BinaryTreeTest {
    */
   @Test
   public void remove_nochild() {
-    BinarySearchTree<SortierInt> wurzel = new BinarySearchTree<SortierInt>(new SortierInt(6));
-    wurzel.insert(new SortierInt(2));
-    wurzel.insert(new SortierInt(12));
-    wurzel.insert(new SortierInt(8));
+    AVL_Tree<SortierInt> wurzel = new AVL_Tree<>(new SortierInt(6));
+    wurzel.insert(new SortierInt(2), wurzel);
+    wurzel.insert(new SortierInt(12), wurzel);
+    wurzel.insert(new SortierInt(8), wurzel);
+    assertEquals(wurzel.search(new SortierInt(8)).inhalt, 8);
     wurzel.remove(new SortierInt(8));
     assertFalse(wurzel.contains(new SortierInt(8)));
   }
@@ -90,10 +93,10 @@ class BinaryTreeTest {
    */
   @Test
   public void remove_onechild() {
-    BinarySearchTree<SortierInt> wurzel = new BinarySearchTree<SortierInt>(new SortierInt(6));
-    wurzel.insert(new SortierInt(2));
-    wurzel.insert(new SortierInt(12));
-    wurzel.insert(new SortierInt(8));
+    AVL_Tree<SortierInt> wurzel = new AVL_Tree<>(new SortierInt(6));
+    wurzel.insert(new SortierInt(2), wurzel);
+    wurzel.insert(new SortierInt(12), wurzel);
+    wurzel.insert(new SortierInt(8), wurzel);
     wurzel.remove(new SortierInt(12));
     assertFalse(wurzel.contains(new SortierInt(12)));
   }
@@ -103,10 +106,10 @@ class BinaryTreeTest {
    */
   @Test
   public void remove_twochildren() {
-    BinarySearchTree<SortierInt> wurzel = new BinarySearchTree<SortierInt>(new SortierInt(6));
-    wurzel.insert(new SortierInt(2));
-    wurzel.insert(new SortierInt(12));
-    wurzel.insert(new SortierInt(8));
+    AVL_Tree<SortierInt> wurzel = new AVL_Tree<>(new SortierInt(6));
+    wurzel.insert(new SortierInt(2), wurzel);
+    wurzel.insert(new SortierInt(12), wurzel);
+    wurzel.insert(new SortierInt(8), wurzel);
     wurzel.remove(new SortierInt(6));
     assertFalse(wurzel.contains(new SortierInt(6)));
   }
