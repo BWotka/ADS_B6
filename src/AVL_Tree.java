@@ -125,7 +125,6 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
 
       }
       // left tree with too long left side
-
         if (getLeft() != null && getBalance() > 0 && getLeft().getBalance() > 0) {
           AVL_Tree<ContentType> temp = getLeft().getRight();
           AVL_Tree<ContentType> tempparent = getParent();
@@ -286,6 +285,13 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
 
     return null;
   }
+
+  /**
+   * Calculates the max depth/high of this tree
+   * uses recursion
+   *
+   * @return max depth of this tree
+   */
   public int getHeight(){
     if (basis == null) {
       return 0;
@@ -300,7 +306,7 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
       hightl = getLeft().getHeight();
     }
     int hightr;
-    if (getLeft() == null) {
+    if (getRight() == null) {
       hightr = 0;
     } else {
       hightr = getRight().getHeight();
@@ -312,6 +318,11 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
     }
   }
 
+  /**
+   * Calculates balance of this tree.
+   *
+   * @return balanace of this tree
+   */
   public int getBalance(){
     int hightl;
     if (getLeft() == null) {

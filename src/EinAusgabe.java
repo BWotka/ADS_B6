@@ -188,21 +188,10 @@ public class EinAusgabe {
     return neuausgabe;
   }
 
-  /**
-   * Calculates the max depth/high of pWurzel
-   * uses recursion
-   *
-   * @param pWurzel of which the max depth will be calcualted
-   * @return max depth of parameter tree
-   */
 
 
-  /**
-   * Calculates balance of pWurzel.
-   *
-   * @param pWurzel tree of which the balance will be calculated
-   * @return balanace of parameter tree
-   */
+
+
 
 }
 
