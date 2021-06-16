@@ -51,9 +51,9 @@ public class EinAusgabe {
           break;
         case 'a':
           System.out.println("Zuerst Preoder");
-          System.out.println(removeEmptyTrees(preorder(intTree, 0)));
+          System.out.println(preorder(intTree, 0));
           System.out.println("Jetzte Inorder");
-          System.out.println(removeEmptyTrees(inorder(intTree, 0)));
+          System.out.println(inorder(intTree, 0));
           break;
         case 's':
           keepRunning = false;
@@ -74,7 +74,7 @@ public class EinAusgabe {
     intTree.remove(new SortierInt(mod));
     System.out.println("Wie soll die Zahl jetzt lauten?");
     sInt.setInhalt(leseInteger());
-    intTree.insert(sInt,  intTree);
+    intTree.insert(sInt,  null);
     System.out.println("Neue Zahl jetzt im Baum");
   }
 
@@ -88,7 +88,7 @@ public class EinAusgabe {
   private void create() {
     System.out.println("Erstellen ausgewählt");
     System.out.println("Welche Zahl soll eingefuegt werden?");
-    intTree.insert(new SortierInt(leseInteger()), intTree);
+    intTree.insert(new SortierInt(leseInteger()), null);
     System.out.println("Zahl erfolgreich eingefuegt");
 
 
@@ -166,10 +166,7 @@ public class EinAusgabe {
    * @return String like "a(ha,ba)"
    */
   private String wertAusgabe(AVL_Tree<SortierInt> pWurzel, int pDepth) {
-    if (pWurzel == null) {
-      return "null";
-    }
-    if (pWurzel.isEmpty()) {
+    if (pWurzel == null || pWurzel.isEmpty()) {
       return "null";
     }
     return pWurzel.getContent().getInhalt() + "(" + pWurzel.getHeight() + " ," + pWurzel.getBalance() + ")";

@@ -1,5 +1,5 @@
 /**
- * Generic BinaryTree which is sorted.
+ * Generic AVL Tree which is sorted.
  * Can be used to store and search information in log(N)
  *
  * @param <ContentType> Stored information of this datatype has to be comparable
@@ -100,7 +100,8 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
   }
 
   private void makeAVL() {
-    if(getBalance() < -1 | getBalance() > 1){
+
+    if(getBalance() < -1 || getBalance() > 1){
       /*
       right outside
       left outside
@@ -108,41 +109,72 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
       right inside
        */
 
+      // save all needed information
+      AVL_Tree<ContentType> parenthere = parent;
+      AVL_Tree<ContentType> lefthere = left;
+      AVL_Tree<ContentType> righthere = right;
+      boolean isRight = isRightTree();
       // right tree with too long right side
-      if(getLeft() != null && getBalance() < 0 && getRight().getBalance() < 0){
-        AVL_Tree<ContentType> temp = getRight().getLeft();
-        AVL_Tree<ContentType> tempparent = getParent();
-        getRight().left = this;
-        this.parent = getRight();
-        getRight().parent = getParent();
-        if(isRightTree()){
-          tempparent.right = getRight();
+      if(getBalance() < 0 && right.getBalance()<0){
+        right = righthere.getLeft();
+        parent = righthere;
+        righthere.left = this;
+        if(isRight){
+          parenthere.right = righthere;
         }
-        else {
-          tempparent.left = getRight();
+        else if(parenthere != null){
+          parenthere.left = righthere;
         }
-        right = temp;
-
       }
-      // left tree with too long left side
-        if (getLeft() != null && getBalance() > 0 && getLeft().getBalance() > 0) {
-          AVL_Tree<ContentType> temp = getLeft().getRight();
-          AVL_Tree<ContentType> tempparent = getParent();
-          getLeft().right = this;
-          this.parent = getLeft();
-          getRight().parent = getParent();
-          if (isRightTree()) {
-            getParent().right = getRight();
-          } else {
-            getParent().left = getRight();
-          }
-          right = temp;
 
+      // left tree with too long left side
+      else if(getBalance() > 0 && left.getBalance()>0){
+        left = lefthere.right;
+        parent = lefthere;
+        lefthere.right = this;
+        if(isRight){
+          parenthere.right = lefthere;
         }
+        else if(parenthere != null){
+          parenthere.left = lefthere;
+        }
+      }
+
+      //right tree with long left
+      else if(getBalance() < 0 && right.getBalance()>0){
+        AVL_Tree<ContentType> futureparent = right.left;
+        right = futureparent.left;
+        righthere.left = futureparent.right;
+        parent = futureparent;
+        futureparent.left = this;
+        futureparent.right = righthere;
+        if(isRight){
+          parenthere.right = futureparent;
+        }
+        else if(parenthere != null){
+          parenthere.left = futureparent;
+        }
+      }
+
+      // left tree with long right
+      else if(getBalance() > 0 && left.getBalance()<0){
+        AVL_Tree<ContentType> futureparent = left.right;
+        left = futureparent.right;
+        lefthere.right = futureparent.left;
+        parent = futureparent;
+        futureparent.right = this;
+        futureparent.left = lefthere;
+        if(isRight){
+          parenthere.right = futureparent;
+        }
+        else if(parenthere != null){
+          parenthere.left = futureparent;
+        }
+      }
 
     }
-    if(getParent() != null){
-      getParent().makeAVL();
+    if(parent != null && !parent.isEmpty() ){
+      parent.makeAVL();
     }
   }
 
@@ -210,7 +242,7 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
 
   /**
    * removes pRemove from tree or children trees.
-   * nothing happens if premove not in tree
+   * nothing happens if pRemove not in tree
    * works with recursion
    *
    * @param pRemove content which will be removed
@@ -246,7 +278,7 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
    * Returns boolean wether pInhalt is in Tree.
    *
    * @param pInhalt which will be searched
-   * @return wether pInhalt is in the BinarySearchTree
+   * @return wether pInhalt is in the AVL Tree
    */
   public boolean contains(ContentType pInhalt) {
     return ! (search(pInhalt) == null);
@@ -325,16 +357,16 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
    */
   public int getBalance(){
     int hightl;
-    if (getLeft() == null) {
+    if (getLeft() == null || getLeft().isEmpty()) {
       hightl = 0;
     } else {
-      hightl = getLeft().getHeight()+1;
+      hightl = getLeft().getHeight();
     }
     int hightr;
-    if (getRight() == null) {
+    if (getRight() == null || getRight().isEmpty()) {
       hightr = 0;
     } else {
-      hightr = getRight().getHeight()+1;
+      hightr = getRight().getHeight();
     }
     return hightl-hightr;
   }
