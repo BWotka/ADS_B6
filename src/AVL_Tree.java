@@ -11,6 +11,7 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
   AVL_Tree<ContentType> left;
   AVL_Tree<ContentType> right;
 
+  public AVL_Tree() {}
   public AVL_Tree(ContentType pBasis) {
     basis = pBasis;
   }
@@ -19,8 +20,7 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
     parent = pParent;
   }
 
-  public AVL_Tree() {
-  }
+
 
   /**
    * removes this element and moves other elements up.
@@ -61,7 +61,7 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
         basis = right.furthestLeft();
         break;
     }
-
+    makeAVL();
 
   }
 
@@ -84,7 +84,6 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
         right = new AVL_Tree<ContentType>();
       }
       right.insert(pInhalt, this);
-      makeAVL();
       return;
     }
 
@@ -93,14 +92,13 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
         left = new AVL_Tree<ContentType>();
       }
       left.insert(pInhalt, this);
-      makeAVL();
       return;
     }
 
   }
 
   private void makeAVL() {
-
+    AVL_Tree<ContentType> parenthere = parent;
     if(getBalance() < -1 || getBalance() > 1){
       /*
       right outside
@@ -109,72 +107,69 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
       right inside
        */
 
-      // save all needed information
-      AVL_Tree<ContentType> parenthere = parent;
-      AVL_Tree<ContentType> lefthere = left;
-      AVL_Tree<ContentType> righthere = right;
-      boolean isRight = isRightTree();
       // right tree with too long right side
       if(getBalance() < 0 && right.getBalance()<0){
-        right = righthere.getLeft();
-        parent = righthere;
-        righthere.left = this;
-        if(isRight){
-          parenthere.right = righthere;
-        }
-        else if(parenthere != null){
-          parenthere.left = righthere;
-        }
+        rotate_left();
       }
 
       // left tree with too long left side
       else if(getBalance() > 0 && left.getBalance()>0){
-        left = lefthere.right;
-        parent = lefthere;
-        lefthere.right = this;
-        if(isRight){
-          parenthere.right = lefthere;
-        }
-        else if(parenthere != null){
-          parenthere.left = lefthere;
-        }
+        rotate_right();
       }
 
       //right tree with long left
       else if(getBalance() < 0 && right.getBalance()>0){
-        AVL_Tree<ContentType> futureparent = right.left;
-        right = futureparent.left;
-        righthere.left = futureparent.right;
-        parent = futureparent;
-        futureparent.left = this;
-        futureparent.right = righthere;
-        if(isRight){
-          parenthere.right = futureparent;
-        }
-        else if(parenthere != null){
-          parenthere.left = futureparent;
-        }
+        right.rotate_right();
+        rotate_left();
       }
 
       // left tree with long right
       else if(getBalance() > 0 && left.getBalance()<0){
-        AVL_Tree<ContentType> futureparent = left.right;
-        left = futureparent.right;
-        lefthere.right = futureparent.left;
-        parent = futureparent;
-        futureparent.right = this;
-        futureparent.left = lefthere;
-        if(isRight){
-          parenthere.right = futureparent;
-        }
-        else if(parenthere != null){
-          parenthere.left = futureparent;
-        }
+        left.rotate_left();
+        rotate_right();
       }
 
     }
-    if(parent != null && !parent.isEmpty() ){
-      parent.makeAVL();
+    if(parenthere != null && !parenthere.isEmpty() ){
+      parenthere.makeAVL();
+    }
+  }
+
+  private void rotate_right(){
+    // save all needed information
+    AVL_Tree<ContentType> parenthere = parent;
+    AVL_Tree<ContentType> lefthere = left;
+    AVL_Tree<ContentType> righthere = right;
+    boolean isRight = isRightTree();
+
+    left = lefthere.right;
+    parent = lefthere;
+    lefthere.parent = parenthere;
+    lefthere.right = this;
+    if(isRight){
+      parenthere.right = lefthere;
+    }
+    else if(parenthere != null){
+      parenthere.left = lefthere;
+    }
+  }
+
+  private void rotate_left(){
+    // save all needed information
+    AVL_Tree<ContentType> parenthere = parent;
+    AVL_Tree<ContentType> lefthere = left;
+    AVL_Tree<ContentType> righthere = right;
+    boolean isRight = isRightTree();
+
+    right = righthere.getLeft();
+    parent = righthere;
+    righthere.parent = parenthere;
+    righthere.left = this;
+    if(isRight){
+      parenthere.right = righthere;
+    }
+    else if(parenthere != null){
+      parenthere.left = righthere;
     }
   }
 
@@ -210,29 +205,27 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
   }
 
   private ContentType furthestLeft() {
-    if (left == null) {
+    if (left == null || left.isEmpty()) {
       ContentType rueckgabe = basis;
       //rechten teil hochziehen / loeschen
-      if (right == null) {
-        basis = null;
-      } else if (right.isEmpty()) {
-        basis = null;
-      } else {
-        basis = right.getContent();
-        right = right.getRight();
-        left = right.getLeft();
-      }
-      return rueckgabe;
-    } else if (left.isEmpty()) {
-      ContentType rueckgabe = basis;
-      //rechten teil hochziehen / loeschen
-      if (right == null | right.isEmpty()) {
+      if (right == null || right.isEmpty()) {
         basis = null;
 
       } else {
         basis = right.getContent();
-        right = right.getRight();
-        left = right.getLeft();
+        if(right.getLeft() != null && !right.getLeft().isEmpty()){
+          left = right.getLeft();
+        }
+        else{
+          left = null;
+        }
+        if(right.getRight() != null && !right.getRight().isEmpty()){
+          right = right.getRight();
+        }
+        else{
+          right = null;
+        }
+        
       }
       return rueckgabe;
     } else {
@@ -369,5 +362,14 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
       hightr = getRight().getHeight();
     }
     return hightl-hightr;
+  }
+
+  public AVL_Tree<ContentType> highestParent(){
+    if(parent != null && !parent.isEmpty()){
+      return parent.highestParent();
+    }
+    else{
+      return this;
+    }
   }
 }

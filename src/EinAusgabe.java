@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 
 /**
  * Used to get data from user and share data with user.
- * Communicating using the Console
+ * Communicating using the console
  */
 public class EinAusgabe {
   boolean keepRunning = true;
@@ -50,9 +50,9 @@ public class EinAusgabe {
           modify();
           break;
         case 'a':
-          System.out.println("Zuerst Preoder");
+          System.out.println("Zuerst Preorder");
           System.out.println(preorder(intTree, 0));
-          System.out.println("Jetzte Inorder");
+          System.out.println("Jetzt Inorder");
           System.out.println(inorder(intTree, 0));
           break;
         case 's':
@@ -76,6 +76,7 @@ public class EinAusgabe {
     sInt.setInhalt(leseInteger());
     intTree.insert(sInt,  null);
     System.out.println("Neue Zahl jetzt im Baum");
+    intTree = intTree.highestParent();
   }
 
   private void remove() {
@@ -83,6 +84,7 @@ public class EinAusgabe {
     System.out.println("Welche Zahl soll geloescht werden(wenn vorhanden)?");
     intTree.remove(new SortierInt(leseInteger()));
     System.out.println("Zahl nicht (mehr) im Baum");
+    intTree = intTree.highestParent();
   }
 
   private void create() {
@@ -90,8 +92,7 @@ public class EinAusgabe {
     System.out.println("Welche Zahl soll eingefuegt werden?");
     intTree.insert(new SortierInt(leseInteger()), null);
     System.out.println("Zahl erfolgreich eingefuegt");
-
-
+    intTree = intTree.highestParent();
   }
 
   private int leseInteger() {
