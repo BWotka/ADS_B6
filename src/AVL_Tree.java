@@ -15,7 +15,7 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
   public AVL_Tree(ContentType pBasis) {
     basis = pBasis;
   }
-  public AVL_Tree(ContentType pBasis,   AVL_Tree<ContentType> pParent){
+  public AVL_Tree(ContentType pBasis,   AVL_Tree<ContentType> pParent) {
     basis = pBasis;
     parent = pParent;
   }
@@ -99,7 +99,7 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
 
   private void makeAVL() {
     AVL_Tree<ContentType> parenthere = parent;
-    if(getBalance() < -1 || getBalance() > 1){
+    if (getBalance() < -1 || getBalance() > 1) {
       /*
       right outside
       left outside
@@ -108,34 +108,34 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
        */
 
       // right tree with too long right side
-      if(getBalance() < 0 && right.getBalance()<0){
+      if (getBalance() < 0 && right.getBalance() < 0) {
         rotate_left();
       }
 
       // left tree with too long left side
-      else if(getBalance() > 0 && left.getBalance()>0){
+      else if (getBalance() > 0 && left.getBalance() > 0) {
         rotate_right();
       }
 
       //right tree with long left
-      else if(getBalance() < 0 && right.getBalance()>0){
+      else if (getBalance() < 0 && right.getBalance() > 0) {
         right.rotate_right();
         rotate_left();
       }
 
       // left tree with long right
-      else if(getBalance() > 0 && left.getBalance()<0){
+      else if (getBalance() > 0 && left.getBalance() < 0) {
         left.rotate_left();
         rotate_right();
       }
 
     }
-    if(parenthere != null && !parenthere.isEmpty() ){
+    if (parenthere != null && !parenthere.isEmpty()) {
       parenthere.makeAVL();
     }
   }
 
-  private void rotate_right(){
+  private void rotate_right() {
     // save all needed information
     AVL_Tree<ContentType> parenthere = parent;
     AVL_Tree<ContentType> lefthere = left;
@@ -146,10 +146,10 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
     parent = lefthere;
     lefthere.parent = parenthere;
     lefthere.right = this;
-    if(isRight){
+    if (isRight) {
       parenthere.right = lefthere;
     }
-    else if(parenthere != null){
+    else if (parenthere != null) {
       parenthere.left = lefthere;
     }
   }
@@ -165,10 +165,10 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
     parent = righthere;
     righthere.parent = parenthere;
     righthere.left = this;
-    if(isRight){
+    if (isRight) {
       parenthere.right = righthere;
     }
-    else if(parenthere != null){
+    else if (parenthere != null) {
       parenthere.left = righthere;
     }
   }
@@ -181,15 +181,19 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
   public AVL_Tree<ContentType> getRight() {
     return right;
   }
-  public   AVL_Tree<ContentType> getParent(){
+  public   AVL_Tree<ContentType> getParent() {
     return parent;
   }
 
+  /**Checks weither this is parent.right
+   *
+   * @return  true if this == parent.right
+   */
   public boolean isRightTree(){
-    if(getParent() == null){
+    if (getParent() == null) {
       return false;
     }
-    if(getParent().getRight() == this){
+    if (getParent().getRight() == this) {
       return true;
     }
     return false;
@@ -213,16 +217,16 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
 
       } else {
         basis = right.getContent();
-        if(right.getLeft() != null && !right.getLeft().isEmpty()){
+        if (right.getLeft() != null && !right.getLeft().isEmpty()) {
           left = right.getLeft();
         }
-        else{
+        else {
           left = null;
         }
-        if(right.getRight() != null && !right.getRight().isEmpty()){
+        if (right.getRight() != null && !right.getRight().isEmpty()) {
           right = right.getRight();
         }
-        else{
+        else {
           right = null;
         }
         
@@ -312,12 +316,12 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
   }
 
   /**
-   * Calculates the max depth/high of this tree
+   * Calculates the max depth/high of this tree.
    * uses recursion
    *
    * @return max depth of this tree
    */
-  public int getHeight(){
+  public int getHeight() {
     if (basis == null) {
       return 0;
     }
@@ -348,7 +352,7 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
    *
    * @return balanace of this tree
    */
-  public int getBalance(){
+  public int getBalance() {
     int hightl;
     if (getLeft() == null || getLeft().isEmpty()) {
       hightl = 0;
@@ -364,11 +368,11 @@ public class AVL_Tree<ContentType extends Vergleichbar<ContentType>> {
     return hightl-hightr;
   }
 
-  public AVL_Tree<ContentType> highestParent(){
-    if(parent != null && !parent.isEmpty()){
+  public AVL_Tree<ContentType> highestParent() {
+    if (parent != null && !parent.isEmpty()){
       return parent.highestParent();
     }
-    else{
+    else {
       return this;
     }
   }
