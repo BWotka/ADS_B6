@@ -6,18 +6,19 @@ import java.io.InputStreamReader;
  * Used to get data from user and share data with user.
  * Communicating using the console
  */
-public class EinAusgabe {
+public class EinAusgabe<ContentType extends Vergleichbar<ContentType>> {
   boolean keepRunning = true;
   BufferedReader br;
-  AVL_Tree<SortierInt> intTree;
-  AVL_Tree<SortierString> stringTree;
+  AVL_Tree<ContentType> avl_SortTree;
+  final Class<ContentType> typeParameterClass;
 
   /**
    * constructor which also starts the main loop.
    */
-  public EinAusgabe() {
+  public EinAusgabe(Class<ContentType> typeParameterClass) {
+    this.typeParameterClass = typeParameterClass;
     br = new BufferedReader(new InputStreamReader(System.in));
-    intTree = new AVL_Tree<>();
+    avl_SortTree = new AVL_Tree<>();
     programLoop();
   }
 
@@ -51,9 +52,9 @@ public class EinAusgabe {
           break;
         case 'a':
           System.out.println("Zuerst Preorder");
-          System.out.println(preorder(intTree, 0));
+          System.out.println(removeEmptyTrees(preorder(avl_SortTree, 0)));
           System.out.println("Jetzt Inorder");
-          System.out.println(inorder(intTree, 0));
+          System.out.println(removeEmptyTrees(inorder(avl_SortTree, 0)));
           break;
         case 's':
           keepRunning = false;
@@ -69,30 +70,30 @@ public class EinAusgabe {
   private void modify() {
     System.out.println("Modifizieren ausgewählt");
     System.out.println("Welche Zahl soll bearbeitet werden?");
-    int mod = leseInteger();
-    SortierInt sInt = intTree.search(new SortierInt(mod));
-    intTree.remove(new SortierInt(mod));
+    ContentType mod = leseEingabe();
+    ContentType sInt = avl_SortTree.search(mod);
+    avl_SortTree.remove(mod);
     System.out.println("Wie soll die Zahl jetzt lauten?");
-    sInt.setInhalt(leseInteger());
-    intTree.insert(sInt,  null);
+    sInt.setInhalt(leseEingabe());
+    avl_SortTree.insert(sInt,  null);
     System.out.println("Neue Zahl jetzt im Baum");
-    intTree = intTree.highestParent();
+    avl_SortTree = avl_SortTree.highestParent();
   }
 
   private void remove() {
     System.out.println("Loeschen ausgewählt");
     System.out.println("Welche Zahl soll geloescht werden(wenn vorhanden)?");
-    intTree.remove(new SortierInt(leseInteger()));
+    avl_SortTree.remove(leseEingabe());
     System.out.println("Zahl nicht (mehr) im Baum");
-    intTree = intTree.highestParent();
+    avl_SortTree = avl_SortTree.highestParent();
   }
 
   private void create() {
     System.out.println("Erstellen ausgewählt");
     System.out.println("Welche Zahl soll eingefuegt werden?");
-    intTree.insert(new SortierInt(leseInteger()), null);
+    avl_SortTree.insert(leseEingabe(), null);
     System.out.println("Zahl erfolgreich eingefuegt");
-    intTree = intTree.highestParent();
+    avl_SortTree = avl_SortTree.highestParent();
   }
 
   private int leseInteger() {
@@ -113,6 +114,32 @@ public class EinAusgabe {
     }
     return neuInt;
   }
+  private String leseString(){
+    String input;
+    String neuString;
+    try {
+      neuString = br.readLine();
+    } catch (IOException pIOException) {
+      System.out.println("Einlesefehler");
+      create();
+      return leseString();
+    }
+    if(neuString.length()<4){
+      System.out.println("Eingabe zu kurz");
+      return leseString();
+    }
+    return neuString;
+  }
+
+  private ContentType leseEingabe() {
+    if (typeParameterClass == SortierString.class) {
+      return (ContentType) new SortierString(leseString());
+    } else if (typeParameterClass == SortierInt.class) {
+      return (ContentType) new SortierInt(leseInteger());
+    } else {
+      return null;
+    }
+  }
 
   /**
    * Used to create String of complete tree in preorder.
@@ -122,7 +149,7 @@ public class EinAusgabe {
    * @param pDepth  depth of pWurzel in complete tree
    * @return preorder String of tree
    */
-  private String preorder(AVL_Tree<SortierInt> pWurzel, int pDepth) {
+  private String preorder(AVL_Tree<ContentType> pWurzel, int pDepth) {
     if (pWurzel == null) {
       return "null\n";
     }
@@ -145,7 +172,7 @@ public class EinAusgabe {
    * @param pDepth  depth of pWurzel in complete tree
    * @return inorder String of tree
    */
-  private String inorder(AVL_Tree<SortierInt> pWurzel, int pDepth) {
+  private String inorder(AVL_Tree<ContentType> pWurzel, int pDepth) {
     if (pWurzel == null) {
       return "null\n";
     }
@@ -166,7 +193,7 @@ public class EinAusgabe {
    * @param pDepth  depth of pWurzel in complete tree
    * @return String like "a(ha,ba)"
    */
-  private String wertAusgabe(AVL_Tree<SortierInt> pWurzel, int pDepth) {
+  private String wertAusgabe(AVL_Tree<ContentType> pWurzel, int pDepth) {
     if (pWurzel == null || pWurzel.isEmpty()) {
       return "null";
     }

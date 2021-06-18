@@ -3,7 +3,7 @@
  */
 public class Starter {
   public static void main(String[] args) {
-    EinAusgabe einaus = new EinAusgabe();
+    EinAusgabe einaus = new EinAusgabe(SortierString.class);
 
   }
 }

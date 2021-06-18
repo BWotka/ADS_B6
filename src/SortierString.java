@@ -44,4 +44,11 @@ public class SortierString implements Vergleichbar<SortierString> {
   public String getInhalt() {
     return inhalt;
   }
+
+  @Override
+  public void setInhalt(SortierString pInhalt) {
+    inhalt = pInhalt.getInhalt();
+  }
+
+
 }

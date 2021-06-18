@@ -28,4 +28,7 @@ public interface Vergleichbar<ContentType> {
    * @return true if this < parameter
    */
   boolean isLess(ContentType pVergleich);
+
+  Object getInhalt();
+  void setInhalt(ContentType pInhalt);
 }

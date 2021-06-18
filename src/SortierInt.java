@@ -41,11 +41,14 @@ public class SortierInt implements Vergleichbar<SortierInt> {
     return inhalt < pVergleich.getInhalt();
   }
 
-  public int getInhalt() {
+  public Integer getInhalt() {
     return inhalt;
   }
 
-  public void setInhalt(int pNeu) {
-    inhalt = pNeu;
+  @Override
+  public void setInhalt(SortierInt pInhalt) {
+    inhalt = pInhalt.getInhalt();
   }
+
+
 }
